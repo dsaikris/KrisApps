@@ -27,7 +27,7 @@ with col3:
     df = pd.DataFrame(
         {
             "Invoice": [cat, f"Tax - @{rate}%", "Total"],
-            "021124-ASDF": [f"${price}",f"S{tax}",f"${price + tax}"]
+            "021124-ASDF": [f"${price}",f"${tax}",f"${price + tax}"]
         }
     )
     st.write(df);
@@ -51,7 +51,7 @@ with col3:
     df = pd.DataFrame(
         {
             "Invoice": [cat, f"Tax - @{rate}%", "Total"],
-            "021124-ASDF": [f"${price}",f"S{tax}",f"${price + tax}"]
+            "021124-ASDF": [f"${price}",f"${tax}",f"${price + tax}"]
         }
     )
     st.write(df);
