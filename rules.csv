@@ -1,0 +1,9 @@
+Category,Jurisdiction,TaxRate%
+Electronics,Seattle,10.1
+Electronics,Spokane,8.9
+Perishables,Seattle,9.5
+Perishables,Spokane,8.7
+Electronics,Tacoma,9.9
+Electronics,Bellevue,10.0
+Perishables,Tacoma,9.3
+Perishables,Bellevue,9.8

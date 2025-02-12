@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns">
+    <key id="name" for="node" attr.name="name" attr.type="string"/>
+    <key id="age" for="node" attr.name="age" attr.type="int"/>
+    <key id="type" for="edge" attr.name="type" attr.type="string"/>
+    <graph id="PG" edgedefault="directed">
+        <node id="1">
+            <data key="name">Alice</data>
+            <data key="age">31</data>
+        </node>
+        <node id="2">
+            <data key="name">Bob</data>
+            <data key="age">27</data>
+        </node>
+        <edge id="3" source="1" target="2" label="knows">
+            <data key="type">friends</data>
+        </edge>
+    </graph>
+</graphml>
