@@ -2,4 +2,6 @@
 matplotlib
 streamlit
 pandas
-bigtree[image]
+pyspellchecker
+torch
+transformers

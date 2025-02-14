@@ -61,11 +61,11 @@ st.markdown("""### Observations
 - This app loads the rules for each calc run which is extremely slow.
 - One machine cannot take so much load so we may need a cluster of machines taking the load evenly.
 - Also there is no ledger and due process to handle transactions and taxes.
-- We also have the rendering, tax calculation and rule access mixed up, it needs to be separated. We need
+- We also have the rendering, tax calculation and rule access all mixed up, it needs to be separated. We need
     - UI to ploace orders
     - Service to manage orders
-    - Service to calculate taxes
-    - Service to invoice, process payments, etc.
+    - Helper service to calculate taxes
+    - Helper services to invoice, process payments, etc.
 - From the code you can see we are doing O(n) search in **rules.loc**.
     - With lot of rules this would be extremely slow.
     - We also have **rules.loc(...).values[0]** which is hacky, we should avoid it.
@@ -82,36 +82,37 @@ st.markdown("""### A place order web page
 """);
 st.code("""
     price = selectedProduct.price()
-    order = orderService.placeOrder(user, product, price, ...);
+    order = orderService.place(user, product, price, ...);
     st.write(order.invoice);
 """)
 
-st.markdown("""### A placeOrder api in OrderService
-- placeOrder(user, product, price, ...)
+st.markdown("""### A /place post api in OrderService
+- Accepts user, product, price, ... and returns invoice
 - responsibility of orders table
 - access to call payment gateway, invoice service and others
 - logic to generate invoice
+- Typical order states are Pending, Charged, Canceled.
 """)
 st.code("""
-    order = createPending((user, product, price, ...);
+    order = create(user, product, price, ...);
     ordersRepo.save(order)
     rate,tax,total = taxService.calc(order);
     ordersRepo.saveTaxes(order,rate,tax,total)
     if(paymentGateway.charge(order)):
         ordersRepo.markCharged(order)
         ordersRepo.setinvoice(invoiceService.generate(order))
-        ...
 """)
 
-st.markdown("""### A calcOrder api in TaxService
+st.markdown("""### A /calc get api in TaxService
+- Accepts cat, city and returns rate,tax,total
 - Responsible for just calculating taxes
 - Pre loads all the rules into memory LRU cache with TTL of few hours
 - LRU cache is for quickly serving high velocity orders in main cities
 - Also, this way the cache becomes localized and it becomes easy to add new cities as we expand.
 """)
 st.code("""
-    rules = preLoadedDataFrames.get(order.city+".csv"))
-    rate = first(rules.loc[(rules['Category'] == order.cat)), 'TaxRate%'].values)
+    rules = preLoadedDataFrames.get(city+".csv"))
+    rate = first(rules.loc[(rules['Category'] == cat)), 'TaxRate%'].values)
     tax = price * rate/100
     total = price + tax
 """)
