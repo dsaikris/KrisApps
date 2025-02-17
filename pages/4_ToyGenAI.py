@@ -53,8 +53,8 @@ st.markdown("""GPT2 does in in 3 main steps.
 1. Decode output tokens.
 ### Encode tokens
 GPT2 transformer will convert input words into tokens and then encode them to a number. Think of it like a dictionary of all words/tokens and the number is its index.
-It will use its pre trained transformer neural network to get the indices which I observed are always the same.
-Here are the tokens for your text.
+Actually, it will use byte pair encoding or compression algorithm to get partial words also mapped to unique id. It also uses sub word level tokenization scheme and retains the knowledge like words `book, bookings, books` all have the root word `book` so it could be modeled as one token.
+I observed the tokens are similar for similar text. Below are the tokens for your text. Also, you can see few special characters like `Ġ` and `Ċ` are used to denote starting or words and new lines.
 """)
 tokens = tokenizer.convert_ids_to_tokens(inputs[0])
 token_ids = inputs[0].numpy()
@@ -63,7 +63,14 @@ st.code(f"Tokens as numbers:\n{token_ids}")
 plot_token_bars(token_ids, tokens, "Input Tokens", dispaly_function=display)
 
 st.markdown("""### Generate output tokens
-Then it will use its large neural network to get the next token number and then the next token number for 50 times. I set is to 50 here you can set a larger one for more generated output. That is it will generate word by word just that it only understands numbers.
+Then it will use its large neural network to get the next token number and then the next token number for 50 times. I set is to 50 here you can set a larger one for more generated output. It means the neural network is used to generate kind of word by word.
+It will do many things in this step like
+1. Token embedding : Since we need to capture the semantic meaning of words like `cat` and `kitten` are similar we endode each token number into 768 numbers which is called vectors or tensors. The values were optimized by the pre training done by OpenAI and are now static numbers in the model.
+1. Position embedding : Also we need to know when in the sentence or paragraph a particular token has occurred like `2` in `The cat is sleeping.` and 6 in `the doorbell woke up the cat`. GPT-2 uses absolute position vectors again of 768 numbers. When they trained the neural network they used 1024 token chunks to train in batches of 512. These numbers highly depends on the hardware capability and implementation of pre training. This 1024 is called `context` length as it means the model will only care for token positions in this range. To continue the context when the batches are created typically some overlap is feed in to the pre-training it is called stride length which would be 512 about half of the context length for GPT-2.
+1. Input embedding : The final input that is feed into the generator  =  token embeddings + position embeddings for each token in the context chunk or the context sequence.
+1. Generation : Just generate the next token using generator neural network, that is forward pass the neural network. It is pretty interesting to know how it works and trained. I will update this sections as I learn about it.
+
+This the the huge neural network or collection of neural networks that were pre trained by OpenAI spending a lot of compute power and feeding around 44TB of public internat data.
 """)
 output_tokens = tokenizer.convert_ids_to_tokens(outputs[0])
 output_token_ids = outputs[0].numpy()
@@ -77,6 +84,12 @@ st.text_area("Generated text", generated_text + " ..", height=500, disabled=True
 st.markdown("""## Finally the code that you can take away
 """)
 st.code("""
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
+
+model_name = "gpt2"
+model = GPT2LMHeadModel.from_pretrained(model_name)
+tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+
 inputs = tokenizer.encode(text_input, return_tensors="pt")
 outputs = model.generate(
         inputs, max_length=inputs.shape[1] + 50,
@@ -84,3 +97,9 @@ outputs = model.generate(
         no_repeat_ngram_size=4)
 generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 """)
+
+st.markdown("""### Embeddings for first 3 tokens out of curiosity
+""")
+st.code(f"For tokens {inputs[0][0:3]}")
+st.code(f"{model.transformer.wte.weight[inputs[0][0:3]]}")
+st.code(f"{model.transformer.wpe.weight[inputs[0][0:3]]}")

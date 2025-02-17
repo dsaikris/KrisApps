@@ -62,7 +62,7 @@ st.markdown("""### Observations
 - One machine cannot take so much load so we may need a cluster of machines taking the load evenly.
 - Also there is no ledger and due process to handle transactions and taxes.
 - We also have the rendering, tax calculation and rule access all mixed up, it needs to be separated. We need
-    - UI to ploace orders
+    - UI to place orders
     - Service to manage orders
     - Helper service to calculate taxes
     - Helper services to invoice, process payments, etc.
