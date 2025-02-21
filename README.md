@@ -1,6 +1,6 @@
 # KrisApps
 
-> Some apps built using Streamlit. 
+> Some apps built using Streamlit.
 > Visit https://krisapps.streamlit.app/ or https://krisapps-386486290258.us-west4.run.app to try out the apps.
 
 > For developers: Here are the instructions to locally run Stremlint
@@ -10,6 +10,7 @@
 python3 -m venv ./venv
 source ./venv/bin/activate
 python3 -m pip install -r requirements.txt
+python3 -m py_compile Home.py
 streamlit run Home.py --server.port 8080
 ```
 

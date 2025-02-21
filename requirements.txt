@@ -5,3 +5,4 @@ pandas
 pyspellchecker
 torch
 transformers
+watchdog

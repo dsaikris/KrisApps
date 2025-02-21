@@ -1,23 +1,35 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import os
+import warnings
+warnings.filterwarnings('ignore')
+os.environ['TRANSFORMERS_VERBOSITY'] = 'error' 
 
 st.set_page_config(
-    page_title="ToyGenAI",
+    page_title="How GPT2 Works",
     page_icon="👋",
 )
 
-st.markdown("# ToyGenAI")
+st.markdown("# How GPT2 Works")
+
+@st.cache_resource
+def model(model_name):
+    return GPT2LMHeadModel.from_pretrained(model_name)
+
+@st.cache_resource
+def tokenizer(model_name):
+    return GPT2Tokenizer.from_pretrained(model_name)
 
 model_name = "gpt2"
-model = GPT2LMHeadModel.from_pretrained(model_name)
-tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+model = model(model_name)
+tokenizer = tokenizer(model_name)
 
 col1, col2  = st.columns(2)
 with col1:
     st.markdown("## Past some text here")
     text_input = st.text_area("","""
-I have no special talents. I am only passionately curious.
+    I have no special talents. I am only passionately curious.
 """, height=500, max_chars=300)
     if not text_input: text_input=""
     inputs = tokenizer.encode(text_input, return_tensors="pt")
@@ -89,6 +101,8 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 model_name = "gpt2"
 model = GPT2LMHeadModel.from_pretrained(model_name)
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+        
+text_input = st.text_area("Inout","Your input text here.")
 
 inputs = tokenizer.encode(text_input, return_tensors="pt")
 outputs = model.generate(
