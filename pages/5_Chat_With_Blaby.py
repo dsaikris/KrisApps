@@ -11,8 +11,13 @@ def tokenizer(model_name):
 def model(model_name):
     return AutoModelForCausalLM.from_pretrained(model_name)
 
-tokenizer = tokenizer(model_name)
-model = model(model_name)
+with st.spinner(f"""Loading ...
+                As GenAI business is costly, I am doing a cold start to save some ducks and bucks.
+                See source code to understand how `@streamlit.cache_resource` and `streamlit.spinner` are used.
+                Downloading {model_name} from Hugging Face `transformers` can take upto 3-5 minutes, please be patient.
+                """):
+    model = model(model_name)
+    tokenizer = tokenizer(model_name)
 
 st.markdown("## Blaby - A game of questions and answers")
 

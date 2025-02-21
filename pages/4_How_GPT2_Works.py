@@ -22,8 +22,13 @@ def tokenizer(model_name):
     return GPT2Tokenizer.from_pretrained(model_name)
 
 model_name = "gpt2"
-model = model(model_name)
-tokenizer = tokenizer(model_name)
+with st.spinner(f"""Loading ...
+                As GenAI business is costly, I am doing a cold start to save some ducks and bucks.
+                See source code to understand how `@streamlit.cache_resource` and `streamlit.spinner` are used.
+                Downloading {model_name} from Hugging Face `transformers` can take upto 3-5 minutes, please be patient.
+                """):
+    model = model(model_name)
+    tokenizer = tokenizer(model_name)
 
 col1, col2  = st.columns(2)
 with col1:
