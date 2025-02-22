@@ -19,7 +19,7 @@ with st.spinner(f"""Loading ...
     model = model(model_name)
     tokenizer = tokenizer(model_name)
 
-st.markdown("## Blaby - A game of questions and answers")
+st.markdown(f"## Blaby - A toy chatbot backed by {model_name} model")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [

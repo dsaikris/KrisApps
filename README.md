@@ -1,7 +1,7 @@
 # KrisApps
 
 > Some apps built using Streamlit.
-> Visit https://krisapps.streamlit.app/ or https://krisapps-386486290258.us-west4.run.app to try out the apps.
+> Visit https://krisapps-386486290258.us-central1.run.app/ or https://krisapps.streamlit.app/ to try out the apps.
 
 > For developers: Here are the instructions to locally run Stremlint
 
