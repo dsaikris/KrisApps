@@ -6,3 +6,7 @@ pyspellchecker
 torch
 transformers
 watchdog
+mujoco
+mujoco-python-viewer
+robot-descriptions
+imageio[ffmpeg]

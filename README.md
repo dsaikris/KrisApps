@@ -10,8 +10,6 @@
 python3 -m venv ./venv
 source ./venv/bin/activate
 python3 -m pip install -r requirements.txt
-python3 -m py_compile Home.py
-streamlit run Home.py --server.port 8080
 ```
 
 ## Run in docker

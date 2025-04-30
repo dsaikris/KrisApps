@@ -1,8 +1,11 @@
 import streamlit as st
 from transformers import AutoTokenizer, AutoModelForCausalLM
+import os
+import warnings
+warnings.filterwarnings('ignore')
+os.environ['TRANSFORMERS_VERBOSITY'] = 'error' 
 
 model_name = "openai-community/gpt2"
-
 @st.cache_resource
 def tokenizer(model_name):
     return AutoTokenizer.from_pretrained(model_name)
