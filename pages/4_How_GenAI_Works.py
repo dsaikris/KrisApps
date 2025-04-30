@@ -20,8 +20,6 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.markdown("# How GenAI Works")
-
 with st.spinner(f"""Loading ...
                 As GenAI business is costly, I am doing a cold start to save some ducks and bucks.
                 See source code to understand how `@streamlit.cache_resource` and `streamlit.spinner` are used.
@@ -33,15 +31,14 @@ with st.spinner(f"""Loading ...
 col1, col2  = st.columns(2)
 with col1:
     st.markdown("## Past some text here")
-    text_input = st.text_area("","""
-    I have no special talents. I am only passionately curious.
+    text_input = st.text_area("","""I have no special talents. I am only passionately curious. - by Albert Einstein
 """, height=500, max_chars=300)
     if not text_input: text_input=""
     inputs = tokenizer.encode(text_input, return_tensors="pt").to(model.device)
     outputs = model.generate(inputs, max_length=inputs.shape[1] + 50, num_return_sequences=1, no_repeat_ngram_size=4)
 with col2:
     generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    st.markdown(f"## {model_name} says! 👋")
+    st.markdown(f"## GenAI says! 👋")
     st.text_area("", generated_text + " ..", height=500, disabled=True)
 
 def plot_token_bars(token_ids, tokens, title, dispaly_function):
