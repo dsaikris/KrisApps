@@ -98,20 +98,25 @@ st.text_area("Generated text", generated_text + " ..", height=500, disabled=True
 st.markdown("""## Finally the code that you can take away
 """)
 st.code("""
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+import streamlit as st
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import os
+import warnings
+warnings.filterwarnings('ignore')
+os.environ['TRANSFORMERS_VERBOSITY'] = 'error'
 
-model_name = "gpt2"
-model = GPT2LMHeadModel.from_pretrained(model_name)
-tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+model_name = "openai-community/gpt2"
+@st.cache_resource
+def tokenizerGpt(model_name):
+    return AutoTokenizer.from_pretrained(model_name)
+
+@st.cache_resource
+def modelGpt(model_name):
+    return AutoModelForCausalLM.from_pretrained(model_name)
         
-text_input = st.text_area("Inout","Your input text here.")
-
-inputs = tokenizer.encode(text_input, return_tensors="pt")
-outputs = model.generate(
-        inputs, max_length=inputs.shape[1] + 50,
-        num_return_sequences=1,
-        no_repeat_ngram_size=4)
-generated_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
+text_input ="I have no special talents. I am only passionately curious. - by Albert Einstein"
+inputs = tokenizer.encode(text_input, return_tensors="pt").to(model.device)
+outputs = model.generate(inputs, max_length=inputs.shape[1] + 50, num_return_sequences=1, no_repeat_ngram_size=4)
 """)
 
 st.markdown("""### Embeddings for first 3 tokens out of curiosity

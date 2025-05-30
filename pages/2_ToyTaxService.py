@@ -7,57 +7,48 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.write("""# ToyTaxService design
+st.write("""# ToyTaxService Design
 Let's try to analyse this Streamlit ToyTaxCalc PyApp
 - We want to make this app work for millions of calculation requests (QPS)
 - We want to support real tax rules for every city in USA
-""");
-
+""")
 rules = pd.read_csv("rules.csv")
-col1, col2, col3  = st.columns(3)
-with col1:
-    st.write(rules)
-with col2:
-    cat = st.radio("Select product category",options=rules['Category'].unique())
-    city = st.radio("Select city of purchase",options=rules['Jurisdiction'].unique())
-    price = st.slider("Select price $", min_value=0,max_value=300, value=100)
-with col3:
-    rate = rules.loc[(rules['Category'] == cat) & (rules['Jurisdiction'] == city), 'TaxRate%'].values[0]
-    tax = price * rate/100
-    df = pd.DataFrame(
-        {
-            "Invoice": [cat, f"Tax - @{rate}%", "Total"],
-            "021124-ASDF": [f"${price}",f"${tax}",f"${price + tax}"]
-        }
-    )
-    st.write(df);
+st.write(rules[['Category', 'Jurisdiction', 'TaxRate%']])
+st.write("## Create a sample order")
+cat = st.radio("Select product category",options=rules['Category'].unique())
+city = st.radio("Select city of purchase",options=rules['Jurisdiction'].unique())
+price = st.slider("Select price $", min_value=0,max_value=300, value=100)
+rate = rules.loc[(rules['Category'] == cat) & (rules['Jurisdiction'] == city), 'TaxRate%'].values[0]
+tax = price * rate/100
+st.write("## A sample invoice")
+df = pd.DataFrame(
+    {
+        "Invoice": [cat, f"Tax - @{rate}%", "Total"],
+        "": [f"${price}",f"${tax}",f"${price + tax}"]
+    }
+)
+st.write(df)
+st.write("## The code")
 st.code("""
-import streamlit as st
-import pandas as pd
-import numpy as np
 rules = pd.read_csv("rules.csv")
-
-
-col1, col2, col3  = st.columns(3)
-with col1:
-    st.write(rules)
-with col2:
-    cat = st.radio("Select product category",options=rules['Category'].unique())
-    city = st.radio("Select city of purchase",options=rules['Jurisdiction'].unique())
-    price = st.slider("Select price $", min_value=0,max_value=300, value=100)
-with col3:
-    rate = rules.loc[(rules['Category'] == cat) & (rules['Jurisdiction'] == city), 'TaxRate%'].values[0]
-    tax = price * rate/100
-    df = pd.DataFrame(
-        {
-            "Invoice": [cat, f"Tax - @{rate}%", "Total"],
-            "021124-ASDF": [f"${price}",f"${tax}",f"${price + tax}"]
-        }
-    )
-    st.write(df);
+st.write(rules[['Category', 'Jurisdiction', 'TaxRate%']])
+st.write("## Create a sample order")
+cat = st.radio("Select product category",options=rules['Category'].unique())
+city = st.radio("Select city of purchase",options=rules['Jurisdiction'].unique())
+price = st.slider("Select price $", min_value=0,max_value=300, value=100)
+rate = rules.loc[(rules['Category'] == cat) & (rules['Jurisdiction'] == city), 'TaxRate%'].values[0]
+tax = price * rate/100
+st.write("## A sample invoice")
+df = pd.DataFrame(
+    {
+        "Invoice": [cat, f"Tax - @{rate}%", "Total"],
+        "": [f"${price}",f"${tax}",f"${price + tax}"]
+    }
+)
+st.write(df)
 """);
 
-st.markdown("""### Observations
+st.markdown("""## Observations
 - This app loads the rules for each calc run which is extremely slow.
 - One machine cannot take so much load so we may need a cluster of machines taking the load evenly.
 - Also there is no ledger and due process to handle transactions and taxes.
@@ -79,7 +70,7 @@ st.markdown("""### A place order web page
 - Responsible for allowing users to place an order for a product
 - Calls order service
 - Shows the bill or invoice
-""");
+""")
 st.code("""
     price = selectedProduct.price()
     order = orderService.place(user, product, price, ...);
